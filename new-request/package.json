@@ -1,0 +1,21 @@
+{
+  "name": "new-request-xlx",
+  "version": "1.0.0",
+  "description": "",
+  "main": "dist/index.js",
+  "files": ["dist/*"],
+  "scripts": {
+    "build": "rollup --config"
+  },
+  "author": "bohu_tang",
+  "license": "ISC",
+  "devDependencies": {
+    "@rollup/plugin-commonjs": "^25.0.7",
+    "@rollup/plugin-json": "^6.1.0",
+    "@rollup/plugin-node-resolve": "^15.2.3",
+    "rollup": "^4.13.0"
+  },
+  "dependencies": {
+    "axios": "^1.6.7"
+  }
+}
