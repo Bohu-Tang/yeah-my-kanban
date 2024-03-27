@@ -35,6 +35,11 @@ jobs:
       run: |
         sudo apt-get update
         sudo apt-get install -y rsync
+        
+    - name: Check rsync path
+      run: |
+        which rsync
+        echo $PATH
 
     - name: Deploy to server
       env:
