@@ -30,7 +30,7 @@ jobs:
           scp -r dist/* root@146.56.200.124:/web/test/yeah-my-kanban
 
       - name: Configure SSH
-        run: echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa && chmod 600 ~/.ssh/id_rsa
+        run: echo "$SSH_PRIVATE_KEY" > ~/root/.ssh/id_rsa && chmod 600 ~/root/.ssh/id_rsa
 
       - name: Connect to server
         run: ssh -o StrictHostKeyChecking=no root@146.56.200.124 'echo Connected to server'
