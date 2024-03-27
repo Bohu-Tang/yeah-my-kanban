@@ -11,12 +11,12 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
       - name: Setup Node.js
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v4
         with:
-          node-version: '18.16.0'
+          node-version: '18'
 
       - name: Install dependencies
         run: npm install
@@ -24,15 +24,15 @@ jobs:
       - name: Build
         run: npm run build
 
-      - name: Deploy to server
-        run: |
-          ssh root@146.56.200.124 'mkdir -p /web/test/yeah-my-kanban'
-          scp -r dist/* root@146.56.200.124:/web/test/yeah-my-kanban
-
       - name: Configure SSH
         run: echo "$SSH_PRIVATE_KEY" > ~/root/.ssh/id_rsa && chmod 600 ~/root/.ssh/id_rsa
 
       - name: Connect to server
         run: ssh -o StrictHostKeyChecking=no root@146.56.200.124 'echo Connected to server'
+        
+      - name: Deploy to server
+        run: |
+          ssh root@146.56.200.124 'mkdir -p /web/test/yeah-my-kanban'
+          scp -r dist/* root@146.56.200.124:/web/test/yeah-my-kanban
 
       
