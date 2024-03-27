@@ -27,4 +27,4 @@
            HOST: ${{ secrets.HOST }}
            PORT: ${{ secrets.PORT }}
          run: |
-           rsync -avz --delete --exclude='.git/' -e "ssh -i ~/.ssh/deploy_key -p $PORT" ./ $USERNAME@$HOST:/path/to/deployment/directory
+           rsync -avz --delete --exclude='.git/' -e "ssh -i ~/.ssh/deploy_key -p $PORT" ./ $USERNAME@$HOST:/web/test/yeah-my-kanban
