@@ -1,39 +1,30 @@
-name: Deploy to Private Server
+   name: Deploy to Server
 
-on:
-  push:
-    branches:
-      - main
+   on:
+     push:
+       branches:
+         - main  # 或者你使用的分支
 
-jobs:
-  build:
-    runs-on: ubuntu-latest
+   jobs:
+     deploy:
+       runs-on: ubuntu-latest
 
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
+       steps:
+       - name: Checkout repository
+         uses: actions/checkout@v2
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v2
-        with:
-          node-version: '18'
+       - name: Set up SSH
+         run: |
+           mkdir -p ~/.ssh
+           echo "${{ secrets.DEPLOY_KEY }}" > ~/.ssh/deploy_key
+           chmod 600 ~/.ssh/deploy_key
+           ssh-keyscan -H ${{ secrets.HOST }} >> ~/.ssh/known_hosts
 
-      - name: Install dependencies
-        run: npm install
-
-      - name: Build
-        run: npm run build
-        
-      - name: Connect to server
-        run: ssh -o StrictHostKeyChecking=no root@146.56.200.124 'echo Connected to server'
-        
-      - name: Deploy to server
-        run: |
-          ssh root@146.56.200.124 'mkdir -p /web/test/yeah-my-kanban'
-          scp -r dist/* root@146.56.200.124:/web/test/yeah-my-kanban
-
-      - name: Configure SSH
-        run: echo "$SSH_PRIVATE_KEY" > /home/runner/.ssh/id_rsa && chmod 600 /home/runner/.ssh/id_rsa
-
-
-      
+       - name: Deploy to server
+         env:
+           DEPLOY_KEY: ${{ secrets.DEPLOY_KEY }}
+           USERNAME: ${{ secrets.USERNAME }}
+           HOST: ${{ secrets.HOST }}
+           PORT: ${{ secrets.PORT }}
+         run: |
+           rsync -avz --delete --exclude='.git/' -e "ssh -i ~/.ssh/deploy_key -p $PORT" ./ $USERNAME@$HOST:/path/to/deployment/directory
