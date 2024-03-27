@@ -1,0 +1,38 @@
+name: Deploy to Private Server
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '18.16.0'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build
+        run: npm run build
+
+      - name: Deploy to server
+        run: |
+          ssh root@146.56.200.124 'mkdir -p /web/test/yeah-my-kanban'
+          scp -r dist/* root@146.56.200.124:/web/test/yeah-my-kanban
+
+      - name: Configure SSH
+        run: echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa && chmod 600 ~/.ssh/id_rsa
+
+      - name: Connect to server
+        run: ssh -o StrictHostKeyChecking=no root@146.56.200.124 'echo Connected to server'
+
+      
