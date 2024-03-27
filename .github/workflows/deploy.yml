@@ -48,4 +48,4 @@ jobs:
         HOST: ${{ secrets.HOST }}
         PORT: ${{ secrets.PORT }}
       run: |
-        rsync -avz --delete --exclude='.git/' --exclude='node_modules' -e "ssh -i ~/.ssh/deploy_key -p $PORT" ./ $USERNAME@$HOST:/web/test/yeah-my-kanban
+        /usr/bin/rsync -avz --delete --exclude='.git/' --exclude='node_modules' -e "ssh -i ~/.ssh/deploy_key -p $PORT" ./ $USERNAME@$HOST:/web/test/yeah-my-kanban
