@@ -32,7 +32,9 @@ jobs:
         ssh-keyscan -H ${{ secrets.HOST }} >> ~/.ssh/known_hosts
 
     - name: Install rsync
-      run: sudo apt-get install -y rsync
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y rsync
 
     - name: Deploy to server
       env:
