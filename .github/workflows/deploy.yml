@@ -1,46 +1,50 @@
+# 定义工作流名称
 name: Build and Deploy to Server
 
+# 定义触发条件
 on:
-  push:
+  push: # 在代码被推送时触发
     branches:
-      - main  # 或者你使用的分支
+      - main  # 指定触发分支为main
 
+# 定义作业
 jobs:
+  # 定义作业名称
   build-and-deploy:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-latest # 指定运行环境为最新版的Ubuntu虚拟环境
 
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v2
+    steps: # 定义作业步骤
+      - name: Checkout repository # 步骤名称
+        uses: actions/checkout@v2 # 使用官方的actions/checkout动作，v2版本，用于检出代码
 
       - name: Set up Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v3 # 使用官方的actions/setup-node动作，v3版本，用于设置Node.js环境
         with:
-          node-version: '18.16.0'
+          node-version: '18.16.0' # 指定Node.js的版本
 
       - name: Install dependencies
-        run: npm install
+        run: npm install # 执行npm install命令安装项目依赖
 
       - name: Build project
-        run: npm run build
+        run: npm run build # 执行npm run build命令构建项目
 
       - name: Set up SSH
         run: |
-          mkdir -p ~/.ssh
-          echo "${{ secrets.DEPLOY_KEY }}" > ~/.ssh/deploy_key
-          chmod 600 ~/.ssh/deploy_key
-          ssh-keyscan -H ${{ secrets.HOST }} >> ~/.ssh/known_hosts
+          mkdir -p ~/.ssh # 创建.ssh目录，用于存放SSH相关配置
+          echo "${{ secrets.DEPLOY_KEY }}" > ~/.ssh/deploy_key # 将GitHub Secrets中的DEPLOY_KEY写入到deploy_key文件
+          chmod 600 ~/.ssh/deploy_key # 设置deploy_key的权限为600
+          ssh-keyscan -H ${{ secrets.HOST }} >> ~/.ssh/known_hosts # 将服务器的SSH密钥添加到known_hosts文件，用于SSH连接时验证服务器的身份
 
       - name: Install rsync
-        run: sudo apt-get update && sudo apt-get install -y rsync
+        run: sudo apt-get update && sudo apt-get install -y rsync # 更新apt包列表并安装rsync工具，用于文件同步
 
       - name: Deploy to server
-        env:
-          DEPLOY_KEY: ${{ secrets.DEPLOY_KEY }}
-          USERNAME: ${{ secrets.USERNAME }}
-          HOST: ${{ secrets.HOST }}
-          PORT: ${{ secrets.PORT }}
+        env: # 定义环境变量
+          DEPLOY_KEY: ${{ secrets.DEPLOY_KEY }} # 设置部署密钥
+          USERNAME: ${{ secrets.USERNAME }} # 设置服务器用户名
+          HOST: ${{ secrets.HOST }} # 设置服务器地址
+          PORT: ${{ secrets.PORT }} # 设置SSH端口
         run: |
-          chmod 600 ~/.ssh/deploy_key
-          # Removed the verbose SSH and rsync logging for a cleaner output
+          chmod 600 ~/.ssh/deploy_key # 再次确保deploy_key的权限为600
           /usr/bin/rsync -az --delete --exclude='.git/' --exclude='node_modules' -e "ssh -i ~/.ssh/deploy_key -p $PORT" ./ $USERNAME@$HOST:/web/test/yeah-my-kanban
+          # 使用rsync同步文件到服务器，排除.git/和node_modules/目录，指定SSH密钥和端口
