@@ -10,44 +10,37 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v2
+      - name: Checkout repository
+        uses: actions/checkout@v2
 
-    - name: Set up Node.js
-      uses: actions/setup-node@v3
-      with:
-        node-version: '18.16.0'
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18.16.0'
 
-    - name: Install dependencies
-      run: npm install
+      - name: Install dependencies
+        run: npm install
 
-    - name: Build project
-      run: npm run build
+      - name: Build project
+        run: npm run build
 
-    - name: Set up SSH
-      run: |
-        mkdir -p ~/.ssh
-        echo "${{ secrets.DEPLOY_KEY }}" > ~/.ssh/deploy_key
-        chmod 600 ~/.ssh/deploy_key
-        ssh-keyscan -H ${{ secrets.HOST }} >> ~/.ssh/known_hosts
+      - name: Set up SSH
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.DEPLOY_KEY }}" > ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
+          ssh-keyscan -H ${{ secrets.HOST }} >> ~/.ssh/known_hosts
 
-    - name: Install rsync
-      run: |
-        sudo apt-get update
-        sudo apt-get install -y rsync
-        
-    - name: Check rsync path
-      run: |
-        which rsync
-        echo $PATH
+      - name: Install rsync
+        run: sudo apt-get update && sudo apt-get install -y rsync
 
-    - name: Deploy to server
-      env:
-        DEPLOY_KEY: ${{ secrets.DEPLOY_KEY }}
-        USERNAME: ${{ secrets.USERNAME }}
-        HOST: ${{ secrets.HOST }}
-        PORT: ${{ secrets.PORT }}
-      run: |
-        chmod 600 ~/.ssh/deploy_key
-        ssh -vT -i ~/.ssh/deploy_key -p $PORT $USERNAME@$HOST || true
-        /usr/bin/rsync -avz --delete --exclude='.git/' --exclude='node_modules' -e "ssh -i ~/.ssh/deploy_key -p $PORT" ./ $USERNAME@$HOST:/web/test/yeah-my-kanban -vvv
+      - name: Deploy to server
+        env:
+          DEPLOY_KEY: ${{ secrets.DEPLOY_KEY }}
+          USERNAME: ${{ secrets.USERNAME }}
+          HOST: ${{ secrets.HOST }}
+          PORT: ${{ secrets.PORT }}
+        run: |
+          chmod 600 ~/.ssh/deploy_key
+          # Removed the verbose SSH and rsync logging for a cleaner output
+          /usr/bin/rsync -az --delete --exclude='.git/' --exclude='node_modules' -e "ssh -i ~/.ssh/deploy_key -p $PORT" ./ $USERNAME@$HOST:/web/test/yeah-my-kanban
