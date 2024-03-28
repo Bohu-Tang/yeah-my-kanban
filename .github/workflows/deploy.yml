@@ -46,8 +46,8 @@ jobs:
         DEPLOY_KEY: ${{ secrets.DEPLOY_KEY }}
         USERNAME: ${{ secrets.USERNAME }}
         HOST: ${{ secrets.HOST }}
-        PORT: ${{ secrets.PORT }} # 替换成你的服务器端口号，如果环境变量不起作用
+        PORT: ${{ secrets.PORT }}
       run: |
         chmod 600 ~/.ssh/deploy_key
-        ssh -vT -i ~/.ssh/deploy_key -p $PORT $USERNAME@$HOST || true  # SSH 连接测试
+        ssh -vT -i ~/.ssh/deploy_key -p $PORT $USERNAME@$HOST || true
         /usr/bin/rsync -avz --delete --exclude='.git/' --exclude='node_modules' -e "ssh -i ~/.ssh/deploy_key -p $PORT" ./ $USERNAME@$HOST:/web/test/yeah-my-kanban -vvv
