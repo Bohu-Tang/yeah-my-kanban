@@ -5,7 +5,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "vite dev",
+    "dev": "vite dev",
     "build": "vite build",
     "test": "npm run lint-staged",
     "lint": "eslint ./src/**/*.{js,jsx}",
