@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { css } from '@emotion/react';
 import logo from './logo.svg';
-import './App.css';
+import './Kanban.css';
 import KanbanBoard, { COLUMN_KEY_TODO, COLUMN_KEY_ONGOING, COLUMN_KEY_DONE } from './KanbanBoard';
-import AdminContext from '../context/AdminContext';
-import { testPost } from '../apiService';
+import AdminContext from '../../context/AdminContext';
+import { testPost } from '../../apiService';
 
 export const kanbanCardStyles = css`
     margin-bottom: 1rem;
@@ -95,7 +95,7 @@ function App() {
     <div className="App">
       <header className="App-header">
         <h1>
-          <span>我的123看板</span>
+          <span>我的看板</span>
           <button onClick={handleSaveAll}>保存所有卡片</button>
           <button onClick={handleAdmin}>
             {isAdmin ? '退出管理员模式' : '进入管理员模式'}
