@@ -95,8 +95,8 @@ function App() {
     <div className="App">
       <header className="App-header">
         <h1>
-          <span>我的123看板</span>
-          <button onClick={handleSaveAll}>保存所有卡片</button>
+          <span>我的123看你好你好板</span>
+          <button onClick={handleSaveAll}>保存哈哈哈所有卡片</button>
           <button onClick={handleAdmin}>
             {isAdmin ? '退出管理员模式' : '进入管理员模式'}
           </button>
