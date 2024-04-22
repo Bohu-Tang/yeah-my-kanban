@@ -30,7 +30,7 @@ export const kanbanCardTitleStyles = css`
 const DATA_STORE_KEY = 'kanban-data-store';
 
 // 主程序
-function App() {
+function Kanban() {
   // 基础数据
   const [todoList, setTodoList] = useState([]);
   const [ongoingList, setOngoingList] = useState([]);
@@ -121,4 +121,4 @@ function App() {
   );
 }
 
-export default App;
+export default Kanban;
