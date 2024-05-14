@@ -23,6 +23,6 @@ const Nav = () => {
         navigate(e.key);
         setCurrent(e.key);
     };
-    return <Menu onClick={onClick} selectedKeys={[current]} mode="horizontal" items={items}/>;
+    return <Menu theme='dark' onClick={onClick} selectedKeys={[current]} mode="horizontal" items={items}/>;
 };
 export default Nav;
